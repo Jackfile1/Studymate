@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subject Selection</title>
+  <style>
+    /* Child-friendly theme with bright pastel colors and playful styles, but less pink */
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: "Comic Sans MS", Arial, sans-serif;
+        background: linear-gradient(135deg, #d0f4de 0%, #fef9d7 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 100vh;
+        text-align: center;
+    }
+    h1 {
+        margin-top: 30px;
+        font-size: 2.5rem;
+        color: #2563eb; /* More of a blue shade for the heading */
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Nav Buttons (Home / Profile / Quiz) */
+    .nav-container {
+        margin: 20px 0;
+    }
+    .nav-button {
+        background-color: #0ea5e9;
+        color: #fff;
+        border: none;
+        border-radius: 30px;
+        padding: 12px 24px;
+        margin: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease, background-color 0.3s;
+    }
+    .nav-button:hover {
+        background-color: #0284c7;
+        transform: translateY(-3px);
+    }
+
+    /* Subjects container */
+    .subjects-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 24px;
+        max-width: 1000px;
+        margin-bottom: 40px;
+    }
+
+    /* Subject boxes */
+    .subject-box {
+        background-color: #fff;
+        width: 220px;
+        border-radius: 20px;
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease;
+        padding: 20px;
+    }
+    .subject-box:hover {
+        transform: translateY(-5px);
+    }
+    .subject-box h2 {
+        margin: 15px 0;
+        font-size: 1.5rem;
+        color: #1a1a1a;
+    }
+
+    /* Age dropdown */
+    select {
+        padding: 8px;
+        font-size: 1rem;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+        outline: none;
+    }
+
+    /* Subject Button */
+    .subject-button {
+        padding: 10px 20px;
+        font-size: 1rem;
+        border-radius: 30px;
+        border: none;
+        background-color: #10b981;
+        color: #fff;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        transition: background-color 0.3s, transform 0.2s;
+    }
+    .subject-button:hover {
+        background-color: #059669;
+        transform: translateY(-3px);
+    }
+
+    .footer {
+        margin-bottom: 20px;
+    }
+
+    /* Media query: stack boxes on smaller screens */
+    @media (max-width: 600px) {
+        .subjects-container {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+  </style>
+</head>
+<body>
+  <h1>Hello, <span id="child-name">Child</span>! Choose Your Subject</h1>
+
+  <div class="nav-container">
+    <button class="nav-button" onclick="goHome()">Home</button>
+    <button class="nav-button" onclick="goProfile()">Profile</button>
+    <button class="nav-button" onclick="goQuiz()">Quiz</button>
+  </div>
+
+  <div class="subjects-container">
+    <!-- Math -->
+    <div class="subject-box">
+      <h2>Math</h2>
+      <select id="math-age">
+        <option value="8">Age 8</option>
+        <option value="9">Age 9</option>
+        <option value="10">Age 10</option>
+        <option value="11">Age 11</option>
+        <option value="12">Age 12</option>
+        <option value="13">Age 13</option>
+        <option value="14">Age 14</option>
+        <option value="15">Age 15</option>
+        <option value="16">Age 16</option>
+      </select>
+      <br>
+      <button class="subject-button" onclick="selectSubject('math','math-age')">Select Math</button>
+    </div>
+
+    <!-- English -->
+    <div class="subject-box">
+      <h2>English</h2>
+      <select id="english-age">
+        <option value="8">Age 8</option>
+        <option value="9">Age 9</option>
+        <option value="10">Age 10</option>
+        <option value="11">Age 11</option>
+        <option value="12">Age 12</option>
+        <option value="13">Age 13</option>
+        <option value="14">Age 14</option>
+        <option value="15">Age 15</option>
+        <option value="16">Age 16</option>
+      </select>
+      <br>
+      <button class="subject-button" onclick="selectSubject('english','english-age')">Select English</button>
+    </div>
+
+    <!-- Science -->
+    <div class="subject-box">
+      <h2>Science</h2>
+      <select id="science-age">
+        <option value="8">Age 8</option>
+        <option value="9">Age 9</option>
+        <option value="10">Age 10</option>
+        <option value="11">Age 11</option>
+        <option value="12">Age 12</option>
+        <option value="13">Age 13</option>
+        <option value="14">Age 14</option>
+        <option value="15">Age 15</option>
+        <option value="16">Age 16</option>
+      </select>
+      <br>
+      <button class="subject-button" onclick="selectSubject('science','science-age')">Select Science</button>
+    </div>
+  </div>
+
+  <div class="footer"></div>
+
+  <!-- Script at the bottom so the elements are loaded first -->
+  <script>
+    // Global functions
+    function goHome() {
+      window.location.href = 'index.html';
+    }
+
+    function goProfile() {
+      window.location.href = 'child profile.html';
+    }
+
+    function goQuiz() {
+      window.location.href = 'quiz.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Load child's name from localStorage
+      const childName = localStorage.getItem('selectedChildName');
+      document.getElementById('child-name').textContent = childName || 'Child';
+    });
+
+    // Make selectSubject a global function
+    function selectSubject(subject, ageId) {
+      const selectedAge = document.getElementById(ageId).value;
+      // Store selected subject and age in localStorage
+      localStorage.setItem('selectedChildAge', selectedAge);
+      console.log('Stored Age in localStorage:', localStorage.getItem('selectedChildAge'));
+      localStorage.setItem('selectedSubject', subject);
+
+      // Navigate directly to quiz.html with subject & age in the query string
+      window.location.href = `quiz.html?subject=${subject}&age=${selectedAge}`;
+    }
+  </script>
+</body>
+</html>
