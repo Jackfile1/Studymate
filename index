@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to EduQuest</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #4a90e2, #50c878);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .container {
+            width: 90%;
+            max-width: 400px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+        }
+        .container:hover {
+            transform: scale(1.02);
+        }
+        h1 {
+            color: #333;
+            font-size: 26px;
+        }
+        #selected-child {
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
+            margin-top: 10px;
+        }
+        .button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #007bff;
+            color: white;
+            padding: 15px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            margin: 10px auto;
+            cursor: pointer;
+            width: 100%;
+            border: none;
+            box-sizing: border-box;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .button:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+        .child-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .child-btn {
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.3s;
+        }
+        .child-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .learning-img {
+            width: 100px;
+            height: 100px;
+            margin: 10px 0;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to EduQuest! 📚✨</h1>
+        <p>Empowering kids to learn and track their progress.</p>
+        <img src="https://cdn-icons-png.flaticon.com/512/1828/1828884.png" alt="School Icon" class="learning-img">
+        <div>
+            <a id="profile-link" href="#" class="button" onclick="goToProfile()">🚀 Go to Profile</a>
+        </div>
+        <p id="selected-child">No child selected</p>
+        <div class="child-selection">
+            <h3>🌟 Select a Profile:</h3>
+            <div class="child-buttons" id="child-buttons"></div>
+            <button class="button" onclick="addChild()">➕ Add Child</button>
+            <div class="delete-container">
+                <select id="delete-select" class="delete-select">
+                    <option value="">-- Select Child to Delete --</option>
+                </select>
+                <button class="button" onclick="deleteChild()">🗑️ Delete Selected Child</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function loadChildren() {
+            if (!localStorage.getItem('selectedChild')) {
+                localStorage.setItem('selectedChild', 'Alex Johnson'); // Default selection
+            }
+            let children = JSON.parse(localStorage.getItem('children')) || [];
+            populateChildren(children);
+        }
+
+        function populateChildren(children) {
+            let childButtons = document.getElementById('child-buttons');
+            let deleteSelect = document.getElementById('delete-select');
+            childButtons.innerHTML = '';
+            deleteSelect.innerHTML = '<option value="">-- Select Child to Delete --</option>';
+            
+            children.forEach(child => {
+                let button = document.createElement('button');
+                button.textContent = child;
+                button.className = 'child-btn';
+                button.style.background = '#' + Math.floor(Math.random() * 16777215).toString(16);
+                button.onclick = function() { selectChild(child); };
+                childButtons.appendChild(button);
+                
+                let option = document.createElement('option');
+                option.value = child;
+                option.textContent = child;
+                deleteSelect.appendChild(option);
+            });
+        }
+
+        function selectChild(childName) {
+            document.getElementById('selected-child').textContent = "Selected Child: " + childName;
+            localStorage.setItem('selectedChild', childName);
+            document.getElementById('profile-link').href = `child profile.html?child=${encodeURIComponent(childName)}`;
+        }
+
+        function addChild() {
+            let newChild = prompt("Enter child's name:");
+            if (newChild && newChild.trim() !== "") {
+                let children = JSON.parse(localStorage.getItem('children')) || [];
+                children.push(newChild);
+                localStorage.setItem('children', JSON.stringify(children));
+                populateChildren(children);
+            }
+        }
+
+        function deleteChild() {
+            let deleteSelect = document.getElementById('delete-select');
+            let selectedChild = deleteSelect.value;
+            if (selectedChild) {
+                let children = JSON.parse(localStorage.getItem('children')) || [];
+                children = children.filter(child => child !== selectedChild);
+                localStorage.setItem('children', JSON.stringify(children));
+                populateChildren(children);
+                if (localStorage.getItem('selectedChild') === selectedChild) {
+                    localStorage.removeItem('selectedChild');
+                    document.getElementById('selected-child').textContent = "No child selected";
+                    document.getElementById('profile-link').href = "#";
+                }
+            }
+        }
+
+        function goToProfile() {
+            let selectedChild = localStorage.getItem('selectedChild');
+            if (selectedChild) {
+                window.location.href = `child-profile.html?child=${encodeURIComponent(selectedChild)}`;
+            } else {
+                alert("Please select a child first.");
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            loadChildren();
+            let selectedChild = localStorage.getItem('selectedChild');
+            if (selectedChild) {
+                document.getElementById('selected-child').textContent = "Selected Child: " + selectedChild;
+                document.getElementById('profile-link').href = `child-profile.html?child=${encodeURIComponent(selectedChild)}`;
+            }
+        });
+    </script>
+</body>
+</html>
