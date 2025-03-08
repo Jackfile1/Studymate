@@ -1,0 +1,169 @@
+<!-- Save this code as an HTML file (e.g., profile.html) and open it in your browser. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Child Profile</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f7f3;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            max-width: 90%;
+            width: 400px;
+            text-align: center;
+        }
+        .heading {
+            font-size: 24px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .avatar {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+        .progress-container {
+            background: #e0e0e0;
+            border-radius: 8px;
+            height: 12px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .progress-bar {
+            height: 12px;
+            border-radius: 8px;
+            background: linear-gradient(to right, #c2b280, #e8dcc2);
+            width: 0%;
+        }
+        .button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #c2b280;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .button.outline {
+            background: transparent;
+            border: 2px solid #c2b280;
+            color: #c2b280;
+        }
+        .emoji-picker {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .emoji-picker span {
+            font-size: 30px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .emoji-picker span:hover {
+            transform: scale(1.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="heading">Your Profile</div>
+        <div id="avatar" class="avatar">🙂</div>
+        <h2 id="childName">Loading...</h2>
+        <p id="childInfo">Loading...</p>
+        <p id="childDescription">Loading...</p>
+        
+        <h3>Progress</h3>
+        <div class="progress-container">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+        <p id="progressText">Loading...</p>
+        
+        <h3>Badges Earned: <strong id="badgesCount">0</strong></h3>
+        
+        <h3>Subject Progress</h3>
+        <p>Math: <span id="mathProgress">Loading...</span>%</p>
+        <p>Science: <span id="scienceProgress">Loading...</span>%</p>
+        <p>English: <span id="englishProgress">Loading...</span>%</p>
+
+        <div class="emoji-picker" id="emojiPicker">
+            <span onclick="selectAvatar('😀')">😀</span>
+            <span onclick="selectAvatar('🤩')">🤩</span>
+            <span onclick="selectAvatar('😎')">😎</span>
+            <span onclick="selectAvatar('🤓')">🤓</span>
+            <span onclick="selectAvatar('🥳')">🥳</span>
+            <span onclick="selectAvatar('🐱')">🐱</span>
+            <span onclick="selectAvatar('🐶')">🐶</span>
+            <span onclick="selectAvatar('🐸')">🐸</span>
+            <span onclick="selectAvatar('🐼')">🐼</span>
+        </div>
+
+        <button onclick="editProfile()" class="button">Edit Profile</button>
+        <button onclick="window.location.href='index.html'" class="button outline">Back to Landing Page</button>
+        <button onclick="window.location.href='subject selection.html'" class="button outline">Select Subjects</button>
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const selectedChild = localStorage.getItem("selectedChild");
+        if (selectedChild) {
+            loadProfile(selectedChild);
+        } else {
+            document.getElementById("childName").textContent = "No child selected";
+        }
+
+        function loadProfile(childName) {
+            const childrenData = JSON.parse(localStorage.getItem("childrenProfiles")) || {};
+            const childData = childrenData[childName] || {};
+
+            document.getElementById("avatar").textContent = childData.avatar || "🙂";
+            document.getElementById("childName").textContent = childName;
+            document.getElementById("childInfo").textContent = childData.age ? `${childData.age} years old` : "Age not set";
+            document.getElementById("childDescription").textContent = childData.description || "No description available.";
+
+            localStorage.setItem('selectedChildName', childName);
+            localStorage.setItem('selectedChildAge', childData.age || '');
+        }
+
+        window.selectAvatar = function(emoji) {
+            updateProfile({ avatar: emoji });
+        }
+
+        window.editProfile = function() {
+            const age = prompt("Enter new age:");
+            const description = prompt("Enter a brief description:");
+            const updates = {};
+            if (age) updates.age = age;
+            if (description) updates.description = description;
+            updateProfile(updates);
+        }
+
+        function updateProfile(updates) {
+            const selectedChild = localStorage.getItem("selectedChild");
+            if (!selectedChild) return;
+
+            const childrenData = JSON.parse(localStorage.getItem("childrenProfiles")) || {};
+            childrenData[selectedChild] = { ...childrenData[selectedChild], ...updates };
+
+            localStorage.setItem("childrenProfiles", JSON.stringify(childrenData));
+            loadProfile(selectedChild);
+        }
+    });
+    </script>
+</body>
+</html>
